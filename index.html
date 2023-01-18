@@ -15,6 +15,23 @@
    <script>
     const ctx = document.getElementById('myChart');
 
+    // Gradient Fill
+   let width, height, gradient;
+   function getGradient(ctx) {
+    const chartWidth = chartArea.right - chartArea.left;
+    const chartHeight = chartArea.bottom - chartArea.top;
+    if (!gradient || width !== chartWidth || height !== chartHeight) {
+        width = chartWidth;
+        height = chartHeight;
+        gradient = ctx.createLinearGradient(0, chartArea.bottom, 0 , chartArea.top);
+        gradient.addColorStop(0, Utils.CHART_COLORS.blue);
+        gradient.addColorStop(0.5, Utils.CHART_COLORS.yellow);
+        gradient.addColorStop(1, Utils.CHART_COLORS.red);
+    }
+
+    return gradient;
+   }
+
     new Chart(ctx, {
         type: 'line',
         data: {
@@ -22,14 +39,20 @@
             datasets: [{
                 label: 'Biggest YouTube Channels by Views',
                 data: [211.61, 147.87, 136.89, 90.42, 86.77, 86.22, 73.30, 72.11, 59.69, 57.36],
-                borderWidth: 1
+                borderWidth: 1,
+                fill: true,
+                backgroundColor: true,
             }]
         },
         options: {
             responsive: true,
             scales: {
                 y: {
-                    beginAtZero: true
+                    ticks: {
+                        callback: function (value){
+                            return 'Views (billions)' + " " + value;
+                        }
+                    }
                 }
             }
         }
